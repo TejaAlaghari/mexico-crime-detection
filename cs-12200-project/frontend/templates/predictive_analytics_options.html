@@ -1,0 +1,109 @@
+<main>
+
+ <h1>Please select the year and crime type to predict crime rates</h1>
+    <style>
+      h1
+      {
+        font-size:25px;
+        margin-top:5;
+        font-family:Times, sans-serif;
+        letter-spacing:1px;
+        text-decoration:none;
+        color:black;
+      }
+
+    </style>
+
+    <script type= "text/javascript">
+
+        window.onload = function() {
+            var ele = document.getElementById("past_radio");
+            ele.checked = false;
+
+            ele = document.getElementById("future_radio");
+            ele.checked = false;
+        }
+
+        function set_time(ele) {
+            if(ele.checked == true && ele.value === "past") {
+                document.getElementById("past_years").style.display = "block";
+                document.getElementById("future_years").style.display = "none";
+            }
+            if(ele.checked == true && ele.value === "future") {
+                document.getElementById("past_years").style.display = "none";
+                document.getElementById("future_years").style.display = "block";
+            }
+        }
+
+        function submit_form() {
+            var ele = document.getElementById("past_radio");
+            var rm_ele;
+            if(ele.checked == true)
+                rm_ele = document.getElementById("future_years");
+            
+            ele = document.getElementById("future_radio");
+            if(ele.checked == true)
+                rm_ele = document.getElementById("past_years");
+
+            if(typeof rm_ele === "undefined") {
+                alert("Select an option !!");
+                return false;
+            }
+
+            alert("Removing " + rm_ele.id);
+            rm_ele.parentNode.removeChild(rm_ele);
+            return true;
+        }
+    </script>
+
+    <form action="/predictive_analytics_output" method="get" onsubmit = "return submit_form()">
+
+        <p1>Crime Type</p1>
+        
+        <select name="crime_type">
+        {% for crime in crime_types_list %}
+
+            <option value="{{crime}}">{{crime}}</option>
+
+        {% endfor %}
+    
+        </select>
+        <br> </br>
+
+        <p2>Please select a time-line </p2>
+
+        <input type= "radio" name= "time" value= "past" id= "past_radio" onchange= "set_time(this)" checked= ""> Past </input>
+        &nbsp; &nbsp; 
+        <input type= "radio" name= "time" value= "future" id= "future_radio" onchange= "set_time(this)" checked= ""> Future </input>
+        <br> </br>
+
+        <div id= "past_years" style= "display: none">
+
+            <p2>Year</p2> 
+            <select name="year">
+            {% for year in years %}
+
+                <option value="{{year[0]}}">{{year[0]}}</option>
+
+            {% endfor %}
+            </select>
+            <br> </br>
+        </div>
+
+        <div  id= "future_years" style= "display: none">
+
+            <p2>Year</p2> 
+            <select name="year">
+            {% for year in fyears %}
+
+                <option value="{{year}}">{{year}}</option>
+
+            {% endfor %}
+            </select>
+            <br> </br>
+        </div>
+
+        <input type="submit" value="Submit"> 
+    </form>
+
+</main>
